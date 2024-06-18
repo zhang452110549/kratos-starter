@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package api.v1.user;
+
+import "google/api/annotations.proto";
+
+option go_package = "kratos-starter/api/v1/user;user";
+option java_multiple_files = true;
+option java_package = "com.github.kratos-starter.api.v1.user";
+option java_outer_classname = "UserProtoV1";
+
+service UserService {
+  rpc ListAllUsers(ListALlUserRequest) returns (ListALlUserResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/all"
+    };
+  }
+}
+
+message ListALlUserRequest {
+}
+
+message ListALlUserResponse {
+  repeated User users = 1;
+}
+
+message User {
+  uint32 id = 1;
+  string user_name = 2;
+}

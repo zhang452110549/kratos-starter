@@ -1,0 +1,33 @@
+server:
+  http:
+    addr: 0.0.0.0:8000
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9000
+    timeout: 1s
+data:
+  mysql:
+    address: 127.0.0.1:3306
+    user_name: root
+    password: "123456"
+    dbname: test
+  redis:
+    master_name: # 主节点名称（只用于主从哨兵模式，单机不填此参数）
+    addresses:
+      - 127.0.0.1:6379
+    user_name:
+    password:
+    sentinel_user_name:
+    sentinel_password:
+    db: 0
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+middleware:
+  logger:
+    level: info
+  tracer:
+    service_name: demo # 服务名称
+    ratio: 1.0 # 采样率
+    path: ./logs/trace # 本地日志路径
+    exporter: # 导出方式，支持otlp与file，若留空则不导出
+#    endpoint: 127.0.0.1:4317 # otlp导出地址
