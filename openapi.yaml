@@ -6,6 +6,43 @@ info:
     title: UserService API
     version: 0.0.1
 paths:
+    /v1/user:
+        post:
+            tags:
+                - UserService
+            operationId: UserService_CreateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.user.CreateUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.user.CreateUserResponse'
+    /v1/user/{id}:
+        get:
+            tags:
+                - UserService
+            operationId: UserService_GetUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.user.GetUserResponse'
     /v1/users/all:
         get:
             tags:
@@ -20,6 +57,22 @@ paths:
                                 $ref: '#/components/schemas/api.v1.user.ListALlUserResponse'
 components:
     schemas:
+        api.v1.user.CreateUserRequest:
+            type: object
+            properties:
+                userName:
+                    type: string
+        api.v1.user.CreateUserResponse:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        api.v1.user.GetUserResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.user.User'
         api.v1.user.ListALlUserResponse:
             type: object
             properties:

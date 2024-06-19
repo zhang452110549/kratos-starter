@@ -3,6 +3,7 @@ module kratos-starter
 go 1.22
 
 require (
+	github.com/envoyproxy/protoc-gen-validate v1.0.4
 	github.com/go-kratos/kratos/v2 v2.7.3
 	github.com/google/wire v0.5.0
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible

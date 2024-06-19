@@ -3,6 +3,7 @@ syntax = "proto3";
 package api.v1.user;
 
 import "google/api/annotations.proto";
+import "validate/validate.proto";
 
 option go_package = "kratos-starter/api/v1/user;user";
 option java_multiple_files = true;
@@ -13,6 +14,17 @@ service UserService {
   rpc ListAllUsers(ListALlUserRequest) returns (ListALlUserResponse) {
     option (google.api.http) = {
       get: "/v1/users/all"
+    };
+  }
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/v1/user"
+      body: "*"
+    };
+  }
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get: "/v1/user/{id}"
     };
   }
 }
@@ -27,4 +39,20 @@ message ListALlUserResponse {
 message User {
   uint32 id = 1;
   string user_name = 2;
+}
+
+message CreateUserRequest {
+  string user_name = 1 [(validate.rules).string = {min_len: 1, max_len: 20}];
+}
+
+message CreateUserResponse {
+  uint32 id = 1;
+}
+
+message GetUserRequest {
+  uint32 id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
 }
