@@ -3,9 +3,10 @@ package data
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"strconv"
 	"time"
 
+	"kratos-starter/internal/constant"
 	"kratos-starter/internal/data/model"
 	"kratos-starter/internal/repo"
 
@@ -20,8 +21,12 @@ type userRepo struct {
 	rdb redis.UniversalClient
 }
 
+func (u userRepo) SetUserToken(ctx context.Context, userId uint, sec string, ttl time.Duration) error {
+	return u.rdb.Set(ctx, constant.GenUserTokenKey(strconv.FormatUint(uint64(userId), 32)), sec, ttl).Err()
+}
+
 func (u userRepo) GetById(ctx context.Context, id uint) (user *model.User, err error) {
-	if str, err := u.rdb.Get(ctx, fmt.Sprintf("user:%d", id)).Result(); err != nil {
+	if str, err := u.rdb.Get(ctx, constant.GenUserInfoKey(id)).Result(); err != nil {
 		u.log.WithContext(ctx).Errorf("redis get user:%d failed: %v", id, err)
 	} else {
 		if err := json.Unmarshal([]byte(str), &user); err != nil {
@@ -38,7 +43,7 @@ func (u userRepo) GetById(ctx context.Context, id uint) (user *model.User, err e
 	if data, err := json.Marshal(user); err != nil {
 		u.log.WithContext(ctx).Errorf("json marshal user:%d failed: %v", id, err)
 	} else {
-		if err := u.rdb.Set(ctx, fmt.Sprintf("user:%d", id), data, 10*time.Minute).Err(); err != nil {
+		if err := u.rdb.Set(ctx, constant.GenUserInfoKey(id), data, 10*time.Minute).Err(); err != nil {
 			u.log.WithContext(ctx).Errorf("redis set user:%d failed: %v", id, err)
 		}
 	}

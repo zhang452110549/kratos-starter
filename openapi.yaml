@@ -24,6 +24,24 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.user.CreateUserResponse'
+    /v1/user/login:
+        post:
+            tags:
+                - UserService
+            operationId: UserService_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.user.LoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.user.LoginResponse'
     /v1/user/{id}:
         get:
             tags:
@@ -62,6 +80,8 @@ components:
             properties:
                 userName:
                     type: string
+                password:
+                    type: string
         api.v1.user.CreateUserResponse:
             type: object
             properties:
@@ -80,6 +100,18 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.user.User'
+        api.v1.user.LoginRequest:
+            type: object
+            properties:
+                userName:
+                    type: string
+                password:
+                    type: string
+        api.v1.user.LoginResponse:
+            type: object
+            properties:
+                token:
+                    type: string
         api.v1.user.User:
             type: object
             properties:
