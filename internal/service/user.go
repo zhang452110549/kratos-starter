@@ -14,6 +14,10 @@ type UserService struct {
 	userUc *biz.UserUsecase
 }
 
+func NewUserService(_userUc *biz.UserUsecase) *UserService {
+	return &UserService{userUc: _userUc}
+}
+
 func (s *UserService) ListAllUsers(ctx context.Context, request *userPb.ListALlUserRequest) (*userPb.ListALlUserResponse, error) {
 	users, err := s.userUc.ListAllUsers(ctx)
 	if err != nil {
@@ -37,15 +41,12 @@ func (s *UserService) ListAllUsers(ctx context.Context, request *userPb.ListALlU
 func (s *UserService) CreateUser(ctx context.Context, request *userPb.CreateUserRequest) (*userPb.CreateUserResponse, error) {
 	user := &model.User{
 		UserName: request.GetUserName(),
+		Password: request.GetPassword(),
 	}
 
 	return &userPb.CreateUserResponse{
 		Id: uint32(user.ID),
 	}, s.userUc.CreateUser(ctx, user)
-}
-
-func NewUserService(_userUc *biz.UserUsecase) *UserService {
-	return &UserService{userUc: _userUc}
 }
 
 func (s *UserService) GetUser(ctx context.Context, request *userPb.GetUserRequest) (*userPb.GetUserResponse, error) {
@@ -59,5 +60,19 @@ func (s *UserService) GetUser(ctx context.Context, request *userPb.GetUserReques
 			Id:       uint32(user.ID),
 			UserName: user.UserName,
 		},
+	}, nil
+}
+
+func (s *UserService) Login(ctx context.Context, request *userPb.LoginRequest) (*userPb.LoginResponse, error) {
+	token, err := s.userUc.Login(ctx, &model.User{
+		UserName: request.GetUserName(),
+		Password: request.GetPassword(),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &userPb.LoginResponse{
+		Token: token,
 	}, nil
 }
